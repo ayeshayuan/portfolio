@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>QR Code Generator — SKYZER Portfolio</title>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;min-height:100%;background:#0b0b0c;color:#f5f3ef;font-family:-apple-system,BlinkMacSystemFont,"Inter","Helvetica Neue",Arial,"PingFang SC","Microsoft YaHei",sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:720px;margin:0 auto;padding:36px 20px 80px}
+  h1{font-size:24px;margin:0 0 4px;letter-spacing:-.01em}
+  .sub{color:#a8a6a0;font-size:14px;margin:0 0 28px;line-height:1.5}
+  .row{margin-bottom:20px}
+  label{display:block;font-size:12px;letter-spacing:.12em;color:#a8a6a0;text-transform:uppercase;margin-bottom:8px}
+  input[type=url],input[type=text]{width:100%;padding:12px 14px;background:#141416;border:1px solid #2a2a2d;border-radius:10px;color:#f5f3ef;font-size:14px;font-family:inherit;outline:none}
+  input:focus{border-color:#e8c89c}
+  .opts{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .btnrow{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+  button{appearance:none;border:1px solid #2a2a2d;background:#141416;color:#f5f3ef;padding:10px 16px;border-radius:999px;font-size:13px;cursor:pointer;font-family:inherit;transition:all .15s}
+  button:hover{border-color:#e8c89c;color:#e8c89c}
+  button.primary{background:#e8c89c;color:#0b0b0c;border-color:#e8c89c;font-weight:600}
+  button.primary:hover{background:#f0d2a8;color:#0b0b0c}
+  .qrbox{margin:32px auto 0;padding:24px;background:#f5f3ef;border-radius:16px;display:flex;align-items:center;justify-content:center;width:fit-content;min-width:280px;min-height:280px}
+  #qrcode img,#qrcode canvas{display:block;width:256px !important;height:256px !important}
+  .note{font-size:12px;color:#a8a6a0;margin-top:24px;line-height:1.6}
+  .nav-back{display:inline-flex;align-items:center;gap:6px;color:#a8a6a0;font-size:13px;text-decoration:none;margin-bottom:20px}
+  .nav-back:hover{color:#e8c89c}
+  .status{font-size:13px;color:#a8a6a0;margin-top:12px;min-height:18px}
+  .status.ok{color:#7fdba0}
+  .status.err{color:#f08a8a}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="nav-back" href="../index.html">← Back to site</a>
+  <a class="nav-back" href="./index.html" style="margin-left:14px">Edit content</a>
+
+  <h1>QR Code Generator</h1>
+  <p class="sub">Generate a QR code for this site (or any URL). Download as PNG.</p>
+
+  <div class="row">
+    <label for="url">URL</label>
+    <input type="url" id="url" placeholder="https://..." />
+    <div class="note" id="url-hint" style="margin-top:6px"></div>
+  </div>
+
+  <div class="opts">
+    <div class="row">
+      <label for="fg">Foreground</label>
+      <input type="text" id="fg" value="#0b0b0c" />
+    </div>
+    <div class="row">
+      <label for="bg">Background</label>
+      <input type="text" id="bg" value="#f5f3ef" />
+    </div>
+  </div>
+
+  <div class="btnrow">
+    <button class="primary" id="btn-gen">Generate</button>
+    <button id="btn-download">Download PNG</button>
+    <button id="btn-copy">Copy URL</button>
+  </div>
+
+  <div class="status" id="status"></div>
+
+  <div class="qrbox">
+    <div id="qrcode"></div>
+  </div>
+
+  <p class="note">
+    Tip: the URL is auto-filled with this site's address. If you change it (e.g. to a custom domain),
+    paste the new URL and regenerate. Print the PNG at any size — QR codes scale without losing scan-ability.
+  </p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
+<script>
+(function(){
+  var urlInput = document.getElementById('url');
+  var fgInput = document.getElementById('fg');
+  var bgInput = document.getElementById('bg');
+  var qrBox = document.getElementById('qrcode');
+  var status = document.getElementById('status');
+  var urlHint = document.getElementById('url-hint');
+  var qrInstance = null;
+  var lastUrl = '';
+
+  function setStatus(msg, kind){
+    status.textContent = msg || '';
+    status.className = 'status' + (kind ? ' ' + kind : '');
+  }
+
+  // Default URL: ../ (one level up from admin/)
+  // GitHub Pages serves both the root and the admin/ folder; we go up.
+  function defaultUrl(){
+    // Detect if we're on github.io or custom domain
+    var loc = window.location;
+    // If we're at .../admin/qr.html, the site root is .../index.html
+    var path = loc.pathname.replace(/\/admin\/.*$/, '/');
+    return loc.origin + path;
+  }
+
+  function generate(){
+    var url = urlInput.value.trim();
+    if(!url){
+      setStatus('Please enter a URL.', 'err');
+      return;
+    }
+    qrBox.innerHTML = '';
+    qrInstance = new QRCode(qrBox, {
+      text: url,
+      width: 256,
+      height: 256,
+      colorDark: fgInput.value || '#000000',
+      colorLight: bgInput.value || '#ffffff',
+      correctLevel: QRCode.CorrectLevel.M
+    });
+    lastUrl = url;
+    setStatus('Generated for: ' + url, 'ok');
+  }
+
+  function downloadPng(){
+    if(!qrInstance){
+      setStatus('Generate first, then download.', 'err');
+      return;
+    }
+    // qrcodejs renders to a canvas (or img fallback). Use canvas for high quality.
+    var canvas = qrBox.querySelector('canvas');
+    if(!canvas){
+      // Fallback: use the img
+      var img = qrBox.querySelector('img');
+      if(img){
+        var c = document.createElement('canvas');
+        c.width = img.naturalWidth || 512;
+        c.height = img.naturalHeight || 512;
+        var ctx = c.getContext('2d');
+        ctx.drawImage(img, 0, 0, c.width, c.height);
+        canvas = c;
+      }
+    }
+    if(!canvas){ setStatus('Could not extract QR image.', 'err'); return; }
+
+    canvas.toBlob(function(blob){
+      if(!blob){ setStatus('Browser blocked the export.', 'err'); return; }
+      var a = document.createElement('a');
+      var safe = (lastUrl || 'qr').replace(/^https?:\/\//,'').replace(/[^a-z0-9]+/gi,'-').slice(0,40) || 'qr';
+      a.download = 'qr-' + safe + '.png';
+      a.href = URL.createObjectURL(blob);
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(function(){ URL.revokeObjectURL(a.href); }, 1000);
+      setStatus('Downloaded qr-' + safe + '.png', 'ok');
+    }, 'image/png');
+  }
+
+  function copyUrl(){
+    var url = urlInput.value.trim();
+    if(!url) return;
+    navigator.clipboard.writeText(url).then(function(){
+      setStatus('URL copied to clipboard.', 'ok');
+    }).catch(function(){
+      // Fallback
+      urlInput.select();
+      document.execCommand('copy');
+      setStatus('URL copied (fallback).', 'ok');
+    });
+  }
+
+  // Init
+  var initial = defaultUrl();
+  urlInput.value = initial;
+  urlHint.textContent = 'Auto-filled with this site\'s URL. Change it any time.';
+
+  document.getElementById('btn-gen').addEventListener('click', generate);
+  document.getElementById('btn-download').addEventListener('click', downloadPng);
+  document.getElementById('btn-copy').addEventListener('click', copyUrl);
+
+  // Auto-generate on load
+  generate();
+})();
+</script>
+</body>
+</html>
