@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<meta name="theme-color" content="#0b0b0c" />
+<title data-bind="pageTitle">作品集</title>
+<meta name="description" content="作品集" />
+<style>
+  :root{
+    --bg:#0b0b0c;
+    --bg-2:#141416;
+    --bg-3:#1a1a1d;
+    --line:#2a2a2d;
+    --line-soft:#222225;
+    --ink:#f5f3ef;
+    --ink-dim:#a8a6a0;
+    --ink-mute:#6b6a66;
+    --accent:#e8c89c;
+    --max:960px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Inter","Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;-webkit-font-smoothing:antialiased;line-height:1.6}
+  img,video{max-width:100%;display:block}
+  a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent;transition:border-color .15s}
+  a:hover{border-bottom-color:var(--accent)}
+  .fallback-warn{display:none;background:#3a2a1a;color:#f5d7a8;padding:10px 16px;text-align:center;font-size:13px;border-bottom:1px solid #5a3f24}
+  .fallback-warn.show{display:block}
+
+  /* ============================================
+     HEADER — minimal, just "作品集"
+     ============================================ */
+  header{
+    padding:120px 24px 60px;
+    text-align:center;
+    max-width:var(--max);
+    margin:0 auto;
+  }
+  header .name{
+    margin:0;
+    font-size:clamp(40px,6vw,64px);
+    font-weight:700;
+    letter-spacing:-.02em;
+    line-height:1.1;
+  }
+  header .name::after{
+    content:"";
+    display:block;
+    width:48px;
+    height:2px;
+    background:var(--accent);
+    margin:28px auto 0;
+    opacity:.7;
+  }
+
+  /* ============================================
+     RESUME — hero card, immediate download
+     ============================================ */
+  .resume-section{
+    max-width:var(--max);
+    margin:0 auto;
+    padding:0 24px 32px;
+  }
+  .resume-card{
+    background:linear-gradient(160deg,#1a1815 0%,#141416 50%,#0f0f12 100%);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:48px 40px;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+  }
+  .resume-card::before{
+    content:"";
+    position:absolute;
+    top:0;left:50%;
+    transform:translateX(-50%);
+    width:60%;
+    height:1px;
+    background:linear-gradient(90deg,transparent,var(--accent),transparent);
+    opacity:.4;
+  }
+  .resume-card .label{
+    font-size:11px;
+    letter-spacing:.32em;
+    color:var(--accent);
+    text-transform:uppercase;
+    margin:0 0 16px;
+    font-weight:500;
+  }
+  .resume-card h2{
+    margin:0 0 12px;
+    font-size:clamp(24px,3.2vw,32px);
+    font-weight:600;
+    letter-spacing:-.01em;
+    line-height:1.3;
+  }
+  .resume-card p{
+    color:var(--ink-dim);
+    margin:0 0 32px;
+    font-size:15px;
+    line-height:1.6;
+    max-width:480px;
+    margin-left:auto;
+    margin-right:auto;
+  }
+  .resume-card .download-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:16px 36px;
+    background:var(--accent);
+    color:#0b0b0c;
+    border-radius:999px;
+    font-size:15px;
+    font-weight:600;
+    border-bottom:none;
+    transition:all .25s;
+    box-shadow:0 4px 24px rgba(232,200,156,.15);
+  }
+  .resume-card .download-btn:hover{
+    background:#f0d2a8;
+    transform:translateY(-2px);
+    box-shadow:0 8px 32px rgba(232,200,156,.25);
+  }
+  .resume-card .download-btn .icon{
+    width:16px;height:16px;
+  }
+  .resume-card .file-info{
+    margin:20px 0 0;
+    font-size:12px;
+    color:var(--ink-mute);
+    letter-spacing:.04em;
+  }
+  .resume-card.hidden{display:none}
+
+  /* Divider with scroll hint */
+  .section-divider{
+    max-width:var(--max);
+    margin:0 auto 56px;
+    padding:0 24px;
+    text-align:center;
+  }
+  .section-divider .line{
+    display:flex;
+    align-items:center;
+    gap:24px;
+    color:var(--ink-dim);
+    font-size:22px;
+    letter-spacing:.28em;
+    text-transform:uppercase;
+    font-weight:500;
+  }
+  .section-divider .line::before,
+  .section-divider .line::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:var(--line);
+  }
+
+  /* ============================================
+     WORKS — video portfolio
+     ============================================ */
+  main{max-width:var(--max);margin:0 auto;padding:0 24px 80px}
+  .section-title{
+    font-size:13px;
+    letter-spacing:.22em;
+    color:var(--ink-dim);
+    text-transform:uppercase;
+    margin:0 0 32px;
+    padding-bottom:14px;
+    border-bottom:1px solid var(--line-soft);
+  }
+
+  .works{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:32px;
+  }
+  @media (min-width:760px){
+    .works{grid-template-columns:1fr 1fr;gap:24px}
+  }
+  .work{
+    background:var(--bg-2);
+    border:1px solid var(--line);
+    border-radius:14px;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    transition:border-color .2s;
+  }
+  .work:hover{border-color:#3a3a3d}
+  .work video{
+    width:100%;
+    aspect-ratio:9/16;
+    background:#000;
+    display:block;
+  }
+  @media (min-width:760px){
+    .work video{aspect-ratio:16/9}
+  }
+  .work .body{
+    padding:18px 22px 22px;
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .work h3{
+    margin:0;
+    font-size:17px;
+    font-weight:600;
+    letter-spacing:-.01em;
+  }
+  .work p{
+    margin:0;
+    color:var(--ink-dim);
+    font-size:14px;
+    line-height:1.55;
+  }
+
+  /* ============================================
+     CONTACT — minimal footer card
+     ============================================ */
+  .contact{
+    max-width:var(--max);
+    margin:64px auto 0;
+    padding:0 24px;
+  }
+  .contact-inner{
+    text-align:center;
+    padding:32px 24px;
+    border-top:1px solid var(--line-soft);
+  }
+  .contact .label{
+    font-size:11px;
+    letter-spacing:.28em;
+    color:var(--ink-dim);
+    text-transform:uppercase;
+    margin:0 0 10px;
+  }
+  .contact .value{
+    font-size:clamp(15px,1.8vw,17px);
+    margin:0;
+    font-weight:500;
+    color:var(--ink);
+  }
+  .contact .value a{color:inherit;border-bottom:none}
+  .contact .value a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+
+  /* Footer credit */
+  footer{
+    max-width:var(--max);
+    margin:0 auto;
+    padding:32px 24px;
+    font-size:11px;
+    color:var(--ink-mute);
+    text-align:center;
+    letter-spacing:.04em;
+  }
+
+  /* Empty state */
+  .empty{
+    padding:48px 24px;
+    text-align:center;
+    color:var(--ink-dim);
+    font-size:14px;
+    border:1px dashed var(--line);
+    border-radius:12px;
+  }
+</style>
+</head>
+<body>
+
+<div id="fallback-warn" class="fallback-warn">⚠ 作品数据加载失败 — 显示默认内容（请检查 <code>content/site.json</code>）</div>
+
+<header>
+  <h1 class="name" data-bind="name">作品集</h1>
+</header>
+
+<section class="resume-section">
+  <div class="resume-card hidden" id="resume-card">
+    <p class="label" data-bind="resumeLabel">RESUME</p>
+    <h2 data-bind="resumeTitle">下载我的简历</h2>
+    <p data-bind="resumeSubtitle">PDF 格式，包含完整项目经验和作品集链接</p>
+    <a class="download-btn" id="resume-link" href="#" download>
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      <span data-bind="resumeButtonText">下载简历 PDF</span>
+    </a>
+    <p class="file-info" id="resume-file-info"></p>
+  </div>
+</section>
+
+<div class="section-divider">
+  <div class="line">作品</div>
+</div>
+
+<main>
+  <div class="works" id="works"></div>
+</main>
+
+<section class="contact">
+  <div class="contact-inner">
+    <p class="label" data-bind="contactLabel">联系方式</p>
+    <p class="value" id="contact-value">—</p>
+  </div>
+</section>
+
+<footer>
+  <span data-bind="footerLeft">© 作品集</span>
+  <span data-bind="footerRight">v1</span>
+</footer>
+
+<script>
+(function(){
+  function setText(path, value){
+    var nodes = document.querySelectorAll('[data-bind="'+path+'"]');
+    nodes.forEach(function(n){ n.textContent = value; });
+  }
+  function setContact(value){
+    var el = document.getElementById('contact-value');
+    if(!el) return;
+    if(!value){ el.textContent = '—'; return; }
+    el.innerHTML = '';
+    var a = document.createElement('a');
+    a.href = 'mailto:' + value;
+    a.textContent = value;
+    el.appendChild(a);
+  }
+  function setResume(d){
+    var card = document.getElementById('resume-card');
+    if(!card) return;
+    if(!d.resumeEnabled || !d.resumeFile){
+      card.classList.add('hidden');
+      return;
+    }
+    card.classList.remove('hidden');
+    var link = document.getElementById('resume-link');
+    if(link) link.href = d.resumeFile;
+    var info = document.getElementById('resume-file-info');
+    if(info && d.resumeFileName) info.textContent = d.resumeFileName;
+  }
+  function renderWorks(list){
+    var box = document.getElementById('works');
+    if(!box) return;
+    box.innerHTML = '';
+    if(!Array.isArray(list) || list.length === 0){
+      box.innerHTML = '<div class="empty">作品列表为空 — 请到 <code>content/site.json</code> 添加 works 数组</div>';
+      return;
+    }
+    list.forEach(function(w){
+      var card = document.createElement('article');
+      card.className = 'work';
+      var v = document.createElement('video');
+      v.src = w.src;
+      v.controls = true;
+      v.preload = 'metadata';
+      v.playsInline = true;
+      if(w.poster) v.poster = w.poster;
+      var body = document.createElement('div');
+      body.className = 'body';
+      var h3 = document.createElement('h3');
+      h3.textContent = w.title || '未命名作品';
+      var p = document.createElement('p');
+      p.textContent = w.description || '';
+      body.appendChild(h3);
+      if(w.description) body.appendChild(p);
+      card.appendChild(v);
+      card.appendChild(body);
+      box.appendChild(card);
+    });
+  }
+  function applyData(d){
+    if(d.pageTitle) document.title = d.pageTitle;
+    if(d.name) setText('name', d.name);
+    if(d.worksTitle) setText('worksTitle', d.worksTitle);
+    if(d.contactLabel) setText('contactLabel', d.contactLabel);
+    if(d.contactEmail) setContact(d.contactEmail);
+    if(d.footerLeft) setText('footerLeft', d.footerLeft);
+    if(d.footerRight) setText('footerRight', d.footerRight);
+    if(d.resumeLabel) setText('resumeLabel', d.resumeLabel);
+    if(d.resumeTitle) setText('resumeTitle', d.resumeTitle);
+    if(d.resumeSubtitle) setText('resumeSubtitle', d.resumeSubtitle);
+    if(d.resumeButtonText) setText('resumeButtonText', d.resumeButtonText);
+    setResume(d);
+    if(Array.isArray(d.works)) renderWorks(d.works);
+  }
+  fetch('content/site.json', {cache:'no-store'})
+    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+    .then(applyData)
+    .catch(function(err){
+      console.warn('site.json load failed:', err);
+      var w = document.getElementById('fallback-warn');
+      if(w) w.classList.add('show');
+    });
+})();
+</script>
+</body>
+</html>

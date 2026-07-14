@@ -1,0 +1,28 @@
+{
+  "pageTitle": "作品集",
+  "name": "作品集",
+  "worksTitle": "作品",
+  "works": [
+    {"title": "ad-01 车企宣传", "description": "", "src": "assets/ad-01.mp4", "poster": ""},
+    {"title": "ad-03 净化扇", "description": "", "src": "assets/ad-03.mp4", "poster": ""},
+    {"title": "ad-04 郎酒", "description": "", "src": "assets/ad-04.mp4", "poster": ""},
+    {"title": "ad-05 天合玖玺", "description": "", "src": "assets/ad-05.mp4", "poster": ""},
+    {"title": "ad-06 新希望", "description": "", "src": "assets/ad-06.mp4", "poster": ""},
+    {"title": "AI 广告 01", "description": "", "src": "assets/ai-ad-01.mp4", "poster": ""},
+    {"title": "AI 广告 02", "description": "", "src": "assets/ai-ad-02.mp4", "poster": ""},
+    {"title": "AI 漫剧 01", "description": "", "src": "assets/ai-drama-01.mp4", "poster": ""},
+    {"title": "剧情 01", "description": "", "src": "assets/drama-01.mp4", "poster": ""},
+    {"title": "探店 01 美食", "description": "", "src": "assets/tandian-01.mp4", "poster": ""}
+  ],
+  "resumeEnabled": true,
+  "resumeLabel": "RESUME",
+  "resumeTitle": "下载我的简历",
+  "resumeSubtitle": "PDF 格式，包含完整项目经验和作品集链接",
+  "resumeButtonText": "下载简历 PDF",
+  "resumeFile": "assets/resume.pdf",
+  "resumeFileName": "resume.pdf",
+  "contactLabel": "联系方式",
+  "contactEmail": "2608256166@qq.com",
+  "footerLeft": "© 作品集",
+  "footerRight": "v1"
+}

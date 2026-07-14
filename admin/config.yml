@@ -1,0 +1,49 @@
+backend:
+  name: github
+  repo: ayeshayuan/skyzer-portfolio
+  branch: main
+  open_authoring: false
+
+media_folder: "assets"
+public_folder: "/assets"
+
+publish_mode: editorial_workflow
+
+site_url: https://ayeshayuan.github.io/skyzer-portfolio
+display_url: https://ayeshayuan.github.io/skyzer-portfolio
+
+collections:
+  - name: "site"
+    label: "作品集内容"
+    label_singular: "作品集内容"
+    description: "编辑你的作品集页面。"
+    folder: "content"
+    create: false
+    slug: "site"
+    extension: "json"
+    format: "json"
+    fields:
+      - {label: "浏览器标签标题", name: "pageTitle", widget: "string"}
+      - {label: "页面主标题", name: "name", widget: "string"}
+      - {label: "副标题（角色 / 定位）", name: "role", widget: "string"}
+      - {label: "简介（顶部一段话）", name: "intro", widget: "text"}
+      - {label: "作品区小标题", name: "worksTitle", widget: "string"}
+      - label: "作品列表"
+        name: "works"
+        widget: "list"
+        fields:
+          - {label: "作品标题", name: "title", widget: "string"}
+          - {label: "一句话说明", name: "description", widget: "text"}
+          - {label: "视频文件（在 assets/ 里）", name: "src", widget: "string"}
+          - {label: "封面图（可选）", name: "poster", widget: "string"}
+      - {label: "启用简历下载", name: "resumeEnabled", widget: "boolean", default: true}
+      - {label: "简历小标签", name: "resumeLabel", widget: "string", default: "RESUME"}
+      - {label: "简历标题", name: "resumeTitle", widget: "string", default: "下载我的简历"}
+      - {label: "简历说明", name: "resumeSubtitle", widget: "text"}
+      - {label: "按钮文字", name: "resumeButtonText", widget: "string", default: "下载简历 PDF"}
+      - {label: "简历文件路径", name: "resumeFile", widget: "string", default: "assets/resume.pdf"}
+      - {label: "简历文件名（显示用）", name: "resumeFileName", widget: "string", default: "resume.pdf"}
+      - {label: "联系方式小标签", name: "contactLabel", widget: "string"}
+      - {label: "联系邮箱", name: "contactEmail", widget: "string"}
+      - {label: "页脚左侧", name: "footerLeft", widget: "string"}
+      - {label: "页脚右侧", name: "footerRight", widget: "string"}
