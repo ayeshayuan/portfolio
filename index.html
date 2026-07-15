@@ -435,7 +435,7 @@ img { max-width: 100%; display: block; }
       <!-- 视频 1 -->
       <div class="video-card">
         <div class="video-wrapper has-video">
-          <video src="assets/ad-01-cheshi.mp4" controls preload="metadata"></video>
+          <video src="assets/ad-01-cheshi.mp4" controls playsinline preload="none"></video>
         </div>
         <div class="video-info">
           <h4>ad-01 车企宣传</h4>
@@ -446,7 +446,7 @@ img { max-width: 100%; display: block; }
       <!-- 视频 2 -->
       <div class="video-card">
         <div class="video-wrapper has-video">
-          <video src="assets/ai-drama-01.mp4" controls preload="metadata"></video>
+          <video src="assets/ai-drama-01.mp4" controls playsinline preload="none"></video>
         </div>
         <div class="video-info">
           <h4>ai-drama-01</h4>
@@ -457,7 +457,7 @@ img { max-width: 100%; display: block; }
       <!-- 视频 3 -->
       <div class="video-card">
         <div class="video-wrapper has-video">
-          <video src="assets/ai-ad-01.mp4" controls preload="metadata"></video>
+          <video src="assets/ai-ad-01.mp4" controls playsinline preload="none"></video>
         </div>
         <div class="video-info">
           <h4>ai-ad-01</h4>
@@ -468,7 +468,7 @@ img { max-width: 100%; display: block; }
       <!-- 视频 4 -->
       <div class="video-card">
         <div class="video-wrapper has-video">
-          <video src="assets/ai-ad-02.mp4" controls preload="metadata"></video>
+          <video src="assets/ai-ad-02.mp4" controls playsinline preload="none"></video>
         </div>
         <div class="video-info">
           <h4>ai-ad-02</h4>
@@ -479,7 +479,7 @@ img { max-width: 100%; display: block; }
       <!-- 视频 5 -->
       <div class="video-card">
         <div class="video-wrapper has-video">
-          <video src="assets/tandian-01.mp4" controls preload="metadata"></video>
+          <video src="assets/tandian-01.mp4" controls playsinline preload="none"></video>
         </div>
         <div class="video-info">
           <h4>tandian-01 美食探店</h4>
@@ -505,7 +505,7 @@ img { max-width: 100%; display: block; }
       <!-- 视频 7 -->
       <div class="video-card">
         <div class="video-wrapper has-video">
-          <video src="assets/ad-03.mp4" controls preload="metadata"></video>
+          <video src="assets/ad-03.mp4" controls playsinline preload="none"></video>
         </div>
         <div class="video-info">
           <h4>ad-03 净化扇</h4>
@@ -516,7 +516,7 @@ img { max-width: 100%; display: block; }
       <!-- 视频 8 -->
       <div class="video-card">
         <div class="video-wrapper has-video">
-          <video src="assets/ad-04.mp4" controls preload="metadata"></video>
+          <video src="assets/ad-04.mp4" controls playsinline preload="none"></video>
         </div>
         <div class="video-info">
           <h4>ad-04 郎酒</h4>
@@ -527,7 +527,7 @@ img { max-width: 100%; display: block; }
       <!-- 视频 9 -->
       <div class="video-card">
         <div class="video-wrapper has-video">
-          <video src="assets/ad-05.mp4" controls preload="metadata"></video>
+          <video src="assets/ad-05.mp4" controls playsinline preload="none"></video>
         </div>
         <div class="video-info">
           <h4>ad-05 天合玖玺</h4>
@@ -538,7 +538,7 @@ img { max-width: 100%; display: block; }
       <!-- 视频 10 -->
       <div class="video-card">
         <div class="video-wrapper has-video">
-          <video src="assets/ad-06.mp4" controls preload="metadata"></video>
+          <video src="assets/ad-06.mp4" controls playsinline preload="none"></video>
         </div>
         <div class="video-info">
           <h4>ad-06 新希望乳业</h4>
@@ -549,7 +549,7 @@ img { max-width: 100%; display: block; }
       <!-- 视频 11 -->
       <div class="video-card">
         <div class="video-wrapper has-video">
-          <video src="assets/ad-07.mp4" controls preload="metadata"></video>
+          <video src="assets/ad-07.mp4" controls playsinline preload="none"></video>
         </div>
         <div class="video-info">
           <h4>ad-07 U型枕</h4>
@@ -568,76 +568,6 @@ img { max-width: 100%; display: block; }
   </div>
 </footer>
 
-<!-- 视频拖拽上传脚本 -->
-<script>
-// ==========================================
-// 加载视频（点击上传 / 拖拽）
-// ==========================================
-function loadVideo(input, wrapId, playerId) {
-  const file = input.files[0];
-  if (!file) return;
-
-  const wrapper = document.getElementById(wrapId);
-  const player = document.getElementById(playerId);
-
-  // 创建本地 URL 并加载到 video 元素
-  const url = URL.createObjectURL(file);
-  player.src = url;
-  player.load();
-
-  // 显示"有视频"状态
-  wrapper.classList.add('has-video');
-
-  // 自动播放预览
-  player.play().catch(() => {});
-}
-
-// ==========================================
-// 为所有视频卡片绑定拖拽事件
-// ==========================================
-document.querySelectorAll('.video-wrapper').forEach(wrapper => {
-  // 阻止默认行为（防止浏览器打开视频文件）
-  wrapper.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    wrapper.classList.add('drag-over');
-  });
-
-  wrapper.addEventListener('dragleave', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    wrapper.classList.remove('drag-over');
-  });
-
-  wrapper.addEventListener('drop', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    wrapper.classList.remove('drag-over');
-
-    const file = e.dataTransfer.files[0];
-    if (!file || !file.type.startsWith('video/')) {
-      alert('请拖入视频文件（MP4、MOV 等格式）');
-      return;
-    }
-
-    // 找到该 wrapper 中的 video 和 input
-    const player = wrapper.querySelector('video');
-    const input = wrapper.querySelector('input[type="file"]');
-
-    // 通过 DataTransfer 设置 input.files
-    const dt = new DataTransfer();
-    dt.items.add(file);
-    input.files = dt.files;
-
-    // 加载视频
-    const url = URL.createObjectURL(file);
-    player.src = url;
-    player.load();
-    wrapper.classList.add('has-video');
-    player.play().catch(() => {});
-  });
-});
-</script>
 
 </body>
 </html>
